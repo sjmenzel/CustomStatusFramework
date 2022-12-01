@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "iULyMy6zfM4L2Op2c9ebht22RJv85SS4cowpR77TRqRVnfDA75KVwCTClxGAHdnTSPFB+hQ4W/EEWMKV5a4gIQ==",
+  "success": true,
+  "projectFilePath": "X:\\rustserver\\oxide\\repos\\CustomStatusFramework\\CustomStatusFramework\\CustomStatusFramework.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sjmen\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\sjmen\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

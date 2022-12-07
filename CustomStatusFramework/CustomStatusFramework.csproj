@@ -17,6 +17,9 @@
     <Reference Include="Facepunch.Rcon">
       <HintPath>C:\Users\sjmen\OneDrive\Desktop\DDLS\Facepunch.Rcon.dll</HintPath>
     </Reference>
+    <Reference Include="Facepunch.System">
+      <HintPath>..\..\..\..\RustDedicated_Data\Managed\Facepunch.System.dll</HintPath>
+    </Reference>
     <Reference Include="Facepunch.UnityEngine">
       <HintPath>C:\Users\sjmen\OneDrive\Desktop\DDLS\Facepunch.UnityEngine.dll</HintPath>
     </Reference>
@@ -49,6 +52,9 @@
     </Reference>
     <Reference Include="Oxide.Unity">
       <HintPath>C:\Users\sjmen\OneDrive\Desktop\DDLS\Oxide.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Rust.Data">
+      <HintPath>..\..\..\..\RustDedicated_Data\Managed\Rust.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.Install">
       <HintPath>C:\Users\sjmen\OneDrive\Desktop\DDLS\System.Configuration.Install.dll</HintPath>

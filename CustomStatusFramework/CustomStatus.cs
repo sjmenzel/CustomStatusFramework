@@ -8,6 +8,7 @@ namespace Oxide.Plugins
     {
         public class CustomStatus
         {
+            public string Id { get; set; }
             public string Color { get; set; } = "0.9 0.9 0.9 1";
             public string Icon { get; set; }
             public string LeftText { get; set; } = string.Empty;
@@ -21,9 +22,9 @@ namespace Oxide.Plugins
                 }
             }
             public Func<BasePlayer, bool> OnCondition { get; set; } = (x) => { return true; };
-            public bool IsTriggered(BasePlayer basePlayer)
+            public bool IsTriggered(BasePlayer player)
             {
-                return OnCondition.Invoke(basePlayer);
+                return OnCondition.Invoke(player);
             }
         }
     }

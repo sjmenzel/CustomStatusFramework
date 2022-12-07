@@ -59,7 +59,6 @@ namespace Oxide.Plugins
         }
         object OnCollectiblePickup(CollectibleEntity collectible, BasePlayer player)
         {
-            Puts("OnCollectiblePickup works!");
             return null;
         }
         bool CanPickupEntity(BasePlayer basePlayer, BaseEntity entity)

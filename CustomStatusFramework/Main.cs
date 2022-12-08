@@ -28,6 +28,7 @@ namespace Oxide.Plugins
 
         void OnServerInitialized()
         {
+
             Subscribe(nameof(Unload));
             Subscribe(nameof(OnPlayerMetabolize));
 

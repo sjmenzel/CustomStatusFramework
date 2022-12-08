@@ -11,6 +11,7 @@ namespace Oxide.Plugins
         {
             public CuiElement Element { get; set; }
             public CustomStatus CustomStatus { get; set; }
+
         }
     }
 }

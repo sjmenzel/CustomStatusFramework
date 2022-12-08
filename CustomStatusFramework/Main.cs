@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Oxide.Plugins
 {
-    [Info("CustomStatusFramework", "mr01sam", "1.0.0")]
+    [Info("CustomStatusFramework", "mr01sam", "1.0.1")]
     [Description("Allows plugins to add custom status displays for the UI")]
     internal partial class CustomStatusFramework : CovalencePlugin
     {

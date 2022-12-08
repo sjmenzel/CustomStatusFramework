@@ -1,6 +1,0 @@
-[submodule "release"]
-path = release
-url = https://github.com/sjmenzel/CustomStatusFrameworkRelease
-[submodule "releases"]
-	path = releases
-	url = https://github.com/sjmenzel/RustPlugins-releases-CustomStatusFramework

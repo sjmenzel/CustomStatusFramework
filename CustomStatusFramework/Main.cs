@@ -45,13 +45,13 @@ namespace Oxide.Plugins
             IncrementPlayerItemChangeNotificationCount(basePlayer, item?.info?.shortname);
             return null;
         }
-        void OnEntityBuilt(Planner plan, GameObject go)
-        {
-            if (go.ToBaseEntity() is BuildingBlock)
-            {
-                IncrementPlayerItemChangeNotificationCount(plan?.GetOwnerPlayer(), $"removed {BuildingGrade.Enum.Wood}");
-            }
-        }
+        //void OnEntityBuilt(Planner plan, GameObject go)
+        //{
+        //    if (go.ToBaseEntity() is BuildingBlock)
+        //    {
+        //        IncrementPlayerItemChangeNotificationCount(plan?.GetOwnerPlayer(), $"removed {BuildingGrade.Enum.Wood}");
+        //    }
+        //}
         object OnStructureUpgrade(BaseCombatEntity entity, BasePlayer basePlayer, BuildingGrade.Enum grade)
         {
             IncrementPlayerItemChangeNotificationCount(basePlayer, $"removed {grade}");

@@ -2,7 +2,10 @@ Still WIP, do not review.
 
 # Developer API
 ``` csharp
-/* Sets a status message for a player, this message will persist until manually cleared */
+/* 
+Sets a status message for a player,
+this message will persist until manually cleared.
+*/
 void SetStatus(
   BasePlayer basePlayer,
   string id,
@@ -12,6 +15,9 @@ void SetStatus(
   string imageLibraryIconId
 );
 
+/* 
+Clears a status for a player.
+*/
 void ClearStatus(
   BasePlayer basePlayer,
   string text, 
@@ -20,6 +26,12 @@ void ClearStatus(
   string imageLibraryIconId
 );
 
+/* 
+Performs a Set and Clear and forces the UI to
+update the status list. Useful if you for instance
+want to increment a counter on a status message
+or change the color.
+*/
 void UpdateStatus(
   BasePlayer basePlayer,
   string id,
@@ -29,6 +41,11 @@ void UpdateStatus(
   string imageLibraryIconId
 );
 
+/* 
+Performs a Set and then automatically performs
+a Clear after a set number of seconds. By default,
+this value is 4 seconds.
+*/
 void ShowStatus(
   BasePlayer basePlayer,
   string text, 
@@ -38,15 +55,26 @@ void ShowStatus(
   float seconds? // defaults to 4 seconds if left out
 );
 
+/* 
+Returns a list of status ids that a player currently has.
+*/
 List<string> GetStatusList(
   BasePlayer basePlayer
 );
 
+/* 
+Returns true if the player has the specified status.
+Status ids are case sensitive.
+*/
 bool HasStatus(
   BasePlayer basePlayer,
   string id
 );
 
+/* 
+Creates a global status that will automatically be
+applied to players that satisfy the specified condition.
+*/
 void CreateStatus(
 string id,
   string text, 
@@ -56,6 +84,13 @@ string id,
   Func<BasePlayer, bool> condition
 );
 
+/* 
+Creates a global status that contains a dynamic
+value (such as a counter or timer) evaluated by
+the dynamicValue property that will be
+automatically applied to players that satisfy the
+specified condition.
+*/
 void CreateDynamicStatus(
 string id,
   string text, 

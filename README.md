@@ -2,6 +2,7 @@ Still WIP, do not review.
 
 # Developer API
 ``` csharp
+/* Sets a status message for a player, this message will persist until manually cleared */
 void SetStatus(
   BasePlayer basePlayer,
   string id,

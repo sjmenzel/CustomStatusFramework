@@ -1,5 +1,5 @@
-Still WIP, do not review.
-
+# Overview
+This plugin does not introduce any functionality by itself, but rather provides a framework for other plugins to manipulate the status list that appears in the game UI on the right.
 # Developer API
 ``` csharp
 /* 

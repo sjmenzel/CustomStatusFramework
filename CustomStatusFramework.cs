@@ -1,17 +1,17 @@
-using System;
-using Oxide.Game.Rust.Cui;
-using Oxide.Core;
-using System.Linq;
-using Oxide.Core.Libraries.Covalence;
-using UnityEngine;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Oxide.Core.Plugins;
+using Oxide.Core;
+using Oxide.Core.Libraries.Covalence;
+using System.Collections.Generic;
+using UnityEngine;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using Oxide.Game.Rust.Cui;
 using System.Text;
 
 namespace Oxide.Plugins
 {
-    [Info("CustomStatusFramework", "mr01sam", "1.0.1")]
+    [Info("Custom Status Framework", "mr01sam", "1.0.2")]
     [Description("Allows plugins to add custom status displays for the UI")]
     internal partial class CustomStatusFramework : CovalencePlugin
     {
@@ -36,6 +36,14 @@ namespace Oxide.Plugins
 
         void OnServerInitialized()
         {
+            try
+            {
+                ImageLibrary.Call("isLoaded", null);
+            }
+            catch (Exception)
+            {
+                PrintWarning($"The required dependency ImageLibary is not installed, {Name} will not work properly without it.");
+            }
             Subscribe(nameof(Unload));
             Subscribe(nameof(OnPlayerMetabolize));
             Subscribe(nameof(OnItemPickup));
@@ -53,16 +61,28 @@ namespace Oxide.Plugins
     {
         private List<string> GetStatusList(BasePlayer basePlayer)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return new List<string>();
+            }
             return GetAllStatuses(basePlayer);
         }
 
         private bool HasStatus(BasePlayer basePlayer, string id)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return false;
+            }
             return GetStatusList(basePlayer).Exists(x => x == id);
         }
 
         private void ShowStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId, float seconds = 4f)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return;
+            }
             SetStatus(basePlayer, id, text, subText, color, imageLibraryIconId);
             timer.In(seconds, () =>
             {
@@ -75,6 +95,10 @@ namespace Oxide.Plugins
 
         private void UpdateStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return;
+            }
             ClearStatus(basePlayer, id);
             SetStatus(basePlayer, id, text, subText, color, imageLibraryIconId);
             var statuses = GetStatuses(basePlayer);
@@ -85,6 +109,10 @@ namespace Oxide.Plugins
 
         private void SetStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return;
+            }
             StaticStatuses[basePlayer.UserIDString].Add(new CustomStatus
             {
                 Id = id,
@@ -97,6 +125,10 @@ namespace Oxide.Plugins
 
         private void ClearStatus(BasePlayer basePlayer, string id)
         {
+            if (basePlayer == null || basePlayer.IsNpc)
+            {
+                return;
+            }
             StaticStatuses[basePlayer.UserIDString].RemoveAll(x => x.Id == id);
         }
 

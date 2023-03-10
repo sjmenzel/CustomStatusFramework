@@ -48,6 +48,7 @@ this value is 4 seconds.
 */
 void ShowStatus(
   BasePlayer basePlayer,
+  string id,
   string text, 
   string subText, 
   string color, 

@@ -1,17 +1,17 @@
-using Oxide.Core.Plugins;
 using Oxide.Core;
-using Oxide.Core.Libraries.Covalence;
-using System.Collections.Generic;
+using Oxide.Core.Plugins;
 using UnityEngine;
-using Newtonsoft.Json;
+using Oxide.Game.Rust.Cui;
 using System;
 using System.Linq;
-using Oxide.Game.Rust.Cui;
 using System.Text;
+using System.Collections.Generic;
+using Oxide.Core.Libraries.Covalence;
+using Newtonsoft.Json;
 
 namespace Oxide.Plugins
 {
-    [Info("Custom Status Framework", "mr01sam", "1.0.2")]
+    [Info("Custom Status Framework", "mr01sam", "1.0.3")]
     [Description("Allows plugins to add custom status displays for the UI")]
     internal partial class CustomStatusFramework : CovalencePlugin
     {
@@ -77,13 +77,13 @@ namespace Oxide.Plugins
             return GetStatusList(basePlayer).Exists(x => x == id);
         }
 
-        private void ShowStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId, float seconds = 4f)
+        private void ShowStatus(BasePlayer basePlayer, string id, string color = null, string text = null, string textColor = null, string subText = null, string subTextColor = null, string imageLibraryIconId = null, string iconColor = null, float seconds = 4f)
         {
             if (basePlayer == null || basePlayer.IsNpc)
             {
                 return;
             }
-            SetStatus(basePlayer, id, text, subText, color, imageLibraryIconId);
+            SetStatus(basePlayer, id, color, text, textColor, subText, subTextColor, imageLibraryIconId, iconColor);
             timer.In(seconds, () =>
             {
                 if (basePlayer != null)
@@ -93,21 +93,21 @@ namespace Oxide.Plugins
             });
         }
 
-        private void UpdateStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId)
+        private void UpdateStatus(BasePlayer basePlayer, string id, string color, string text, string textColor, string subText, string subTextColor, string imageLibraryIconId, string iconColor)
         {
             if (basePlayer == null || basePlayer.IsNpc)
             {
                 return;
             }
             ClearStatus(basePlayer, id);
-            SetStatus(basePlayer, id, text, subText, color, imageLibraryIconId);
+            SetStatus(basePlayer, id, color, text, textColor, subText, subTextColor, imageLibraryIconId, iconColor);
             var statuses = GetStatuses(basePlayer);
             var customs = GetCustomStatuses(basePlayer);
             var statics = GetStaticStatuses(basePlayer);
             UpdateStatusHUD(basePlayer, statuses, customs.Concat(statics).ToList());
         }
 
-        private void SetStatus(BasePlayer basePlayer, string id, string text, string subText, string color, string imageLibraryIconId)
+        private void SetStatus(BasePlayer basePlayer, string id, string color, string text, string textColor, string subText, string subTextColor, string imageLibraryIconId, string iconColor)
         {
             if (basePlayer == null || basePlayer.IsNpc)
             {
@@ -118,8 +118,11 @@ namespace Oxide.Plugins
                 Id = id,
                 LeftText = text,
                 RightText = subText,
+                TextColor = textColor,
+                SubTextColor = subTextColor,
                 Color = color,
-                Icon = imageLibraryIconId
+                Icon = imageLibraryIconId,
+                IconColor = iconColor
             });
         }
 
@@ -132,30 +135,66 @@ namespace Oxide.Plugins
             StaticStatuses[basePlayer.UserIDString].RemoveAll(x => x.Id == id);
         }
 
-        private void CreateStatus(string id, string text, string subText, string color, string imageLibraryIconId, Func<BasePlayer, bool> condition)
+        private void DeleteStatus(string id)
+        {
+            CustomStatuses.Remove(id);
+        }
+
+        private void CreateStatus(string id, string color, string text, string subText, string textColor, string subTextColor, string imageLibraryIconId, string iconColor, Func<BasePlayer, bool> condition)
         {
             CustomStatuses[id] = new CustomStatus
             {
                 Id = id,
                 LeftText = text,
                 RightText = subText,
+                TextColor = textColor,
                 Color = color,
                 Icon = imageLibraryIconId,
+                SubTextColor =subTextColor,
+                IconColor = iconColor,
                 OnCondition = condition
             };
         }
 
-        private void CreateDynamicStatus(string id, string text, string color, string imageLibaryIconId, Func<BasePlayer, bool> condition, Func<BasePlayer, string> dynamicValue)
+        private void CreateDynamicStatus(string id, string color, string text, string textColor, string subTextColor, string imageLibraryIconId, string iconColor, Func<BasePlayer, bool> condition, Func<BasePlayer, string> dynamicValue)
         {
             CustomStatuses[id] = new CustomStatus
             {
                 Id = id,
                 LeftText = text,
+                TextColor = textColor,
                 Color = color,
-                Icon = imageLibaryIconId,
+                Icon = imageLibraryIconId,
+                SubTextColor = subTextColor,
+                IconColor = iconColor,
                 OnCondition = condition,
                 DynamicText = dynamicValue
             };
+        }
+    }
+}
+
+namespace Oxide.Plugins
+{
+    partial class CustomStatusFramework
+    {
+        public static class RustColor
+        {
+            public static string Blue = "0.08627 0.25490 0.38431 1";
+            public static string LightBlue = "0.25490 0.61176 0.86275 1";
+            public static string Red = "0.68627 0.21569 0.14118 1";
+            public static string LightRed = "0.91373 0.77647 0.75686 1";
+            //public static string Green = "0.25490 0.30980 0.14510 1";
+            public static string Green = "0.35490 0.40980 0.24510 1";
+            public static string LightGreen = "0.76078 0.94510 0.41176 1";
+            public static string Gray = "0.45490 0.43529 0.40784 1";
+            public static string LightGray = "0.69804 0.66667 0.63529 1";
+            public static string Orange = "1.00000 0.53333 0.18039 1";
+            public static string LightOrange = "1.00000 0.82353 0.56471 1";
+            public static string White = "0.87451 0.83529 0.80000 1";
+            public static string LightWhite = "0.97647 0.97647 0.97647 1";
+            public static string Lime = "0.64706 1.00000 0.00000 1";
+            public static string LightLime = "0.69804 0.83137 0.46667 1";
         }
     }
 }
@@ -167,10 +206,13 @@ namespace Oxide.Plugins
         public class CustomStatus
         {
             public string Id { get; set; }
-            public string Color { get; set; } = "0.9 0.9 0.9 1";
+            public string Color { get; set; } = RustColor.Gray;
             public string Icon { get; set; } = string.Empty;
+            public string IconColor { get; set; } = RustColor.White;
             public string LeftText { get; set; } = string.Empty;
             public string RightText { get; set; } = string.Empty;
+            public string TextColor { get; set; } = RustColor.White;
+            public string SubTextColor { get; set; } = RustColor.LightGray;
             public Func<BasePlayer, string> DynamicText { get; set; } = null;
             public bool IsDynamic
             {
@@ -445,7 +487,7 @@ namespace Oxide.Plugins
             var eg = 2;
             var startY = (eh + eg) * idx;
             var numEntrees = 12;
-            var x = 1072;
+            var x = -16;
             var y = 100 + startY;
             var w = 192;
             var h = (eh + eg) * numEntrees - startY;
@@ -458,14 +500,14 @@ namespace Oxide.Plugins
                 {
                     new CuiImageComponent
                     {
-                        Color = "1 0 0 0"
+                        Color = "0 0 0 0"
                     },
                     new CuiRectTransformComponent
                     {
-                        AnchorMin = "0 0",
-                        AnchorMax = "0 0",
-                        OffsetMin = $"{x} {y}",
-                        OffsetMax = $"{x+w} {y+h}"
+                        AnchorMin = "1 0",
+                        AnchorMax = "1 0",
+                        OffsetMin = $"{x-w} {y}",
+                        OffsetMax = $"{x} {y+h}"
                     }
                 }
             });
@@ -473,7 +515,6 @@ namespace Oxide.Plugins
             idx++;
             var ey = 0;
             var fontSize = 13;
-            var fontColor = "0.78 0.78 0.78 1";
             var left = 26;
             var padding = 8;
             var imgP = 5;
@@ -481,7 +522,13 @@ namespace Oxide.Plugins
             var dynamics = new List<DynamicElement>();
             foreach (var custom in customs)
             {
+                var fontColor = string.IsNullOrEmpty(custom.TextColor) ? RustColor.White : custom.TextColor;
+                var subFontColor = string.IsNullOrEmpty(custom.SubTextColor) ? RustColor.LightGray : custom.SubTextColor;
+                var bgColor = string.IsNullOrEmpty(custom.Color) ? RustColor.Gray : custom.Color;
+                var iconColor = string.IsNullOrEmpty(custom.IconColor) ? RustColor.White : custom.IconColor;
                 var id = $"{parent}.{idx}";
+                var leftText = string.IsNullOrEmpty(custom.LeftText) ? string.Empty : custom.LeftText;
+                var rightText = string.IsNullOrEmpty(custom.RightText) ? string.Empty : custom.RightText;
                 container.Add(new CuiElement
                 {
                     Name = id,
@@ -490,7 +537,8 @@ namespace Oxide.Plugins
                     {
                         new CuiImageComponent
                         {
-                            Color = custom.Color
+                            Color = bgColor,
+                            Material = "assets/icons/greyout.mat"
                         },
                         new CuiRectTransformComponent
                         {
@@ -519,7 +567,7 @@ namespace Oxide.Plugins
                 {
                     iconElement.Components.Add(new CuiImageComponent
                     {
-                        Color = "0 0 0 0.8",
+                        Color = iconColor,
                         Png = GetIcon(custom.Icon)
                     });
                 }
@@ -531,7 +579,7 @@ namespace Oxide.Plugins
                     {
                         new CuiTextComponent
                         {
-                            Text = custom.LeftText.ToUpper(),
+                            Text = leftText.ToUpper(),
                             FontSize = fontSize,
                             Color = fontColor,
                             Align = TextAnchor.MiddleLeft
@@ -545,7 +593,7 @@ namespace Oxide.Plugins
                         }
                     }
                 });
-                var rightText = new CuiElement
+                var rightTextE = new CuiElement
                 {
                     Name = $"{id}.value",
                     Parent = id,
@@ -553,9 +601,9 @@ namespace Oxide.Plugins
                     {
                         new CuiTextComponent
                         {
-                            Text = !custom.IsDynamic ? custom.RightText : custom.DynamicText(basePlayer),
-                            FontSize = fontSize,
-                            Color = fontColor,
+                            Text = !custom.IsDynamic ? rightText : custom.DynamicText(basePlayer),
+                            FontSize = 11,
+                            Color = subFontColor,
                             Align = TextAnchor.MiddleRight
                         },
                         new CuiRectTransformComponent
@@ -567,10 +615,10 @@ namespace Oxide.Plugins
                         }
                     }
                 };
-                container.Add(rightText);
+                container.Add(rightTextE);
                 if (custom.IsDynamic)
                 {
-                    dynamics.Add(new DynamicElement { Element = rightText, CustomStatus = custom });
+                    dynamics.Add(new DynamicElement { Element = rightTextE, CustomStatus = custom });
                 }
                 idx++;
                 ey += eh + eg;
